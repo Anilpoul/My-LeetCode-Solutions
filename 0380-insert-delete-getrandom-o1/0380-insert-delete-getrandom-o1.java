@@ -1,37 +1,36 @@
 class RandomizedSet {
-  public boolean insert(int val) {
-    if (valToIndex.containsKey(val))
-      return false;
-    valToIndex.put(val, vals.size());
-    vals.add(val);
-    return true;
-  }
+    private Map<Integer, Integer> m = new HashMap<>();
+    private List<Integer> l = new ArrayList<>();
+    private Random rnd = new Random();
 
-  public boolean remove(int val) {
-    if (!valToIndex.containsKey(val))
-      return false;
-    final int index = valToIndex.get(val);
-    // The order of the following two lines is important when vals.size() == 1.
-    valToIndex.put(last(vals), index);
-    valToIndex.remove(val);
-    vals.set(index, last(vals));
-    vals.remove(vals.size() - 1);
-    return true;
-  }
+    public RandomizedSet() {
+    }
 
-  public int getRandom() {
-    final int index = rand.nextInt(vals.size());
-    return vals.get(index);
-  }
+    public boolean insert(int val) {
+        if (m.containsKey(val)) {
+            return false;
+        }
+        m.put(val, l.size());
+        l.add(val);
+        return true;
+    }
 
-  // {val: index in vals}
-  private Map<Integer, Integer> valToIndex = new HashMap<>();
-  private List<Integer> vals = new ArrayList<>();
-  private Random rand = new Random();
+    public boolean remove(int val) {
+        if (!m.containsKey(val)) {
+            return false;
+        }
+        int idx = m.get(val);
+        l.set(idx, l.get(l.size() - 1));
+        m.put(l.get(l.size() - 1), idx);
+        l.remove(l.size() - 1);
+        m.remove(val);
+        return true;
+    }
 
-  private int last(List<Integer> vals) {
-    return vals.get(vals.size() - 1);
-  }
+    public int getRandom() {
+        int idx = rnd.nextInt(l.size());
+        return l.get(idx);
+    }
 }
 /**
  * Your RandomizedSet object will be instantiated and called as such:
